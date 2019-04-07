@@ -8,7 +8,7 @@ namespace Yuy2Test
 {
 	public static class Program
 	{
-		public static void Main(string[] args)
+		public unsafe static void Main(string[] args)
 		{
 			if (args.Length < 3)
 			{
@@ -29,7 +29,10 @@ namespace Yuy2Test
 				do
 				{
 					stopwatch.Start();
-					Yuy2Decoder.DecompressYUY2(data, width, height, bitmap.Bits);
+					fixed (byte* dataPtr = data)
+					{
+						Yuy2Decoder.DecompressYUY2(dataPtr, width, height, (byte*)bitmap.BitsPtr);
+					}
 					stopwatch.Stop();
 
 					Console.WriteLine("Processed " + stopwatch.ElapsedMilliseconds);
